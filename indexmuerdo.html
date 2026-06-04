@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muerdo en vivo — Color Humano</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --tierra: #3d2b1f;
+      --musgo: #4a5c3a;
+      --crema: #f5ede0;
+      --ocre: #c4843c;
+      --arena: #d9c4a8;
+      --verde-claro: #8aab6e;
+      --text: #2a1f14;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--tierra);
+      color: var(--crema);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 0 60px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('FullSizeRender.jpeg');
+      background-size: cover;
+      background-position: center top;
+      filter: brightness(0.55) saturate(0.85);
+      transform: scale(1.04);
+      animation: slowZoom 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.10); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(30, 18, 8, 0.0) 0%,
+        rgba(30, 18, 8, 0.15) 40%,
+        rgba(30, 18, 8, 0.80) 80%,
+        rgba(30, 18, 8, 0.97) 100%
+      );
+    }
+
+    /* grain texture */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 6vw;
+      animation: fadeUp 1.2s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      border: 1px solid var(--verde-claro);
+      padding: 5px 14px;
+      border-radius: 40px;
+      margin-bottom: 22px;
+      opacity: 0.9;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(58px, 13vw, 130px);
+      line-height: 0.92;
+      letter-spacing: -2px;
+      color: var(--crema);
+      margin-bottom: 18px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--ocre);
+    }
+
+    .hero-sub {
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 300;
+      color: var(--arena);
+      letter-spacing: 0.5px;
+      margin-bottom: 40px;
+    }
+
+    .hero-sub span {
+      color: var(--crema);
+      font-weight: 500;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: var(--ocre);
+      color: var(--tierra);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: 1px;
+      padding: 16px 36px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-cta:hover {
+      background: #d8964e;
+      transform: translateY(-2px);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.4;
+      animation: bounce 2.4s ease-in-out infinite;
+    }
+
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint svg { width: 18px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── INFO SECTION ── */
+    .info-section {
+      background: var(--tierra);
+      padding: 80px 6vw 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    @media (max-width: 700px) {
+      .info-section { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .info-photo {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .info-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.9);
+    }
+
+    .info-photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(196,132,60,0.25);
+      border-radius: 6px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .info-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--crema);
+    }
+
+    .info-text h2 em {
+      font-style: italic;
+      color: var(--ocre);
+    }
+
+    .info-text p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--arena);
+      margin-bottom: 16px;
+      font-weight: 300;
+    }
+
+    .details-list {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .detail-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(196,132,60,0.15);
+      border: 1px solid rgba(196,132,60,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      margin-bottom: 3px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      color: var(--crema);
+      font-weight: 400;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,132,60,0.3), transparent);
+      margin: 0 6vw;
+      width: calc(100% - 12vw);
+    }
+
+    /* ── TICKET SECTION ── */
+    .ticket-section {
+      padding: 70px 6vw 90px;
+    }
+
+    .ticket-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 36px);
+      color: var(--crema);
+      margin-bottom: 8px;
+    }
+
+    .ticket-section > p {
+      font-size: 14px;
+      color: var(--arena);
+      margin-bottom: 44px;
+      font-weight: 300;
+    }
+
+    .ticket-card {
+      background: linear-gradient(135deg, #2a1c10 0%, #1e1208 100%);
+      border: 1px solid rgba(196,132,60,0.2);
+      border-radius: 10px;
+      padding: 40px;
+      max-width: 540px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ticket-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(196,132,60,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .ticket-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      color: var(--ocre);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .ticket-price-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--arena);
+      margin-bottom: 28px;
+    }
+
+    /* ── FORM ── */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(196,132,60,0.25);
+      border-radius: 4px;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--crema);
+      transition: border-color 0.25s, background 0.25s;
+      outline: none;
+    }
+
+    input::placeholder { color: rgba(245,237,224,0.3); }
+
+    input:focus {
+      border-color: var(--ocre);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn-comprar {
+      width: 100%;
+      margin-top: 28px;
+      background: var(--ocre);
+      color: var(--tierra);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 17px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-comprar:hover {
+      background: #d8964e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(196,132,60,0.3);
+    }
+
+    .btn-comprar:active { transform: translateY(0); }
+
+    .form-note {
+      font-size: 12px;
+      color: rgba(245,237,224,0.35);
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    /* ── SUCCESS MESSAGE ── */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    .success-msg .check {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .success-msg h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--verde-claro);
+      margin-bottom: 8px;
+    }
+
+    .success-msg p {
+      font-size: 14px;
+      color: var(--arena);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 6vw;
+      border-top: 1px solid rgba(196,132,60,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p {
+      font-size: 12px;
+      color: rgba(245,237,224,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--ocre);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="tag">En vivo · Solsticio de invierno</div>
+      <h1 class="hero-title">Muerdo<br><em>en vivo</em></h1>
+      <p class="hero-sub">
+        <span>21 de Junio, 2025</span> &nbsp;·&nbsp; Color Humano, Bosque Peralta Ramos
+      </p>
+      <a href="#entradas" class="btn-cta">Conseguí tu entrada →</a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>más info</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section class="info-section">
+    <div class="info-photo">
+      <!-- 
+        INSTRUCCIÓN: Subí las imágenes al mismo repo y cambiá las src.
+        Acá usamos la misma foto de fondo como placeholder.
+      -->
+      <img src="FullSizeRender.jpeg" alt="Muerdo tocando la guitarra" />
+    </div>
+
+    <div class="info-text">
+      <h2>Una noche<br>entre <em>árboles</em><br>y canciones</h2>
+      <p>
+        Muerdo llega al Bosque Peralta Ramos para un show íntimo en el marco del solsticio de invierno. Guitarra, voz y el silencio del monte de fondo.
+      </p>
+      <p>
+        Color Humano es un espacio bohemio en pleno bosque — un lugar donde la música suena diferente.
+      </p>
+
+      <div class="details-list">
+        <div class="detail-item">
+          <div class="detail-icon">📅</div>
+          <div>
+            <div class="detail-label">Fecha</div>
+            <div class="detail-value">Sábado 21 de Junio, 2025</div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">🕖</div>
+          <div>
+            <div class="detail-label">Horario</div>
+            <div class="detail-value">20:00 hs — puertas abren 19:00</div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">📍</div>
+          <div>
+            <div class="detail-label">Lugar</div>
+            <div class="detail-value">Color Humano · Bosque Peralta Ramos, Mar del Plata</div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">🌿</div>
+          <div>
+            <div class="detail-label">Capacidad</div>
+            <div class="detail-value">Aforo limitado — lugar íntimo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TICKETS -->
+  <section class="ticket-section" id="entradas">
+    <h2>Comprá tu entrada</h2>
+    <p>Completá tus datos y te redirigimos al pago seguro por Mercado Pago.</p>
+
+    <div class="ticket-card">
+      <div class="ticket-price">$20.000</div>
+      <div class="ticket-price-label">Entrada general · por persona</div>
+
+      <!-- FORM -->
+      <div id="ticketForm">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" placeholder="Tu nombre y apellido" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="tucorreo@mail.com" required />
+        </div>
+        <div class="form-group">
+          <label for="telefono">WhatsApp / Teléfono</label>
+          <input type="tel" id="telefono" placeholder="+54 9 223 ..." required />
+        </div>
+
+        <button class="btn-comprar" onclick="handleCompra()">
+          Pagar con Mercado Pago →
+        </button>
+
+        <p class="form-note">
+          Tus datos se usan únicamente para confirmar tu asistencia al evento.
+        </p>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-msg" id="successMsg">
+        <div class="check">🌿</div>
+        <h3>¡Redirigiendo al pago!</h3>
+        <p>Guardamos tus datos. En segundos te llevamos a Mercado Pago.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Muerdo</div>
+    <p>Color Humano · Bosque Peralta Ramos · Mar del Plata</p>
+    <p>© 2025 — Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    // ─────────────────────────────────────────────
+    // CONFIGURACIÓN — editá estos valores
+    // ─────────────────────────────────────────────
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/TU_ID_ACÁ";
+    // Creá una cuenta gratis en formspree.io, hacé un form y pegá tu ID arriba.
+    // Ejemplo real: "https://formspree.io/f/xdoqpbnw"
+
+    const MERCADOPAGO_LINK = "https://mpago.la/TU_LINK_ACÁ";
+    // Pegá acá el link de pago que generaste en tu cuenta de Mercado Pago.
+    // ─────────────────────────────────────────────
+
+    async function handleCompra() {
+      const nombre   = document.getElementById('nombre').value.trim();
+      const email    = document.getElementById('email').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+
+      if (!nombre || !email || !telefono) {
+        alert('Por favor completá todos los campos antes de continuar.');
+        return;
+      }
+
+      // Mostrar mensaje de éxito
+      document.getElementById('ticketForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+
+      // Enviar datos a Formspree (te llegan por email)
+      try {
+        await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            nombre,
+            email,
+            telefono,
+            evento: 'Muerdo en vivo — Color Humano 21/06/2025'
+          })
+        });
+      } catch (e) {
+        console.warn('No se pudo enviar a Formspree:', e);
+        // Igualmente redirige a MP
+      }
+
+      // Redirigir a Mercado Pago luego de 1.5s
+      setTimeout(() => {
+        window.location.href = MERCADOPAGO_LINK;
+      }, 1500);
+    }
+  </script>
+
+</body>
+</html>
